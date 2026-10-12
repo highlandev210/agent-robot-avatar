@@ -41,7 +41,7 @@ test('the demo lists the newest actions last, each flagged with a NEW badge', as
   for (const flag of flags.filter(flag => !flag.isNew)) expect(['none', 'normal']).toContain(flag.badge);
 });
 
-test('the new demo buttons play their real actions and stay labelled in every language', async ({ page }) => {
+test('the new demo buttons play their real actions and stay in English for legacy language links', async ({ page }) => {
   await openDemo(page, '?lang=en');
   await page.evaluate(() => {
     const face = document.getElementById('face');
@@ -60,7 +60,10 @@ test('the new demo buttons play their real actions and stay labelled in every la
     await openDemo(page, `?lang=${lang}`);
     await expect(page.locator('.controls button.is-new')).toHaveCount(2);
     const labels = await page.locator('.controls button.is-new').evaluateAll(list => list.map(button => button.textContent.trim()));
-    expect(labels).toHaveLength(2);
+    expect(labels).toEqual(['Love', 'Random']);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await expect(page.locator('#demoLanguagePanelToggle')).toHaveCount(0);
+    await expect(page.locator('#input')).toHaveAttribute('placeholder', 'Type a message…');
     for (const label of labels) expect(label).not.toBe('');
     expect(new Set(labels).size).toBe(2);
   }
@@ -108,3 +111,12 @@ for (const [name, viewport] of [['phone', { width: 390, height: 844 }], ['small 
     }
   });
 }
+
+ test('saved language preferences cannot override the English interface', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('agentRobotAvatarDemoLanguage', 'ja'));
+  await openDemo(page);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('#send')).toHaveText('Send');
+  await expect(page.locator('.panel-sub')).toHaveText('Random state response demo');
+  await expect(page.locator('#demoLanguagePanel')).toHaveCount(0);
+});

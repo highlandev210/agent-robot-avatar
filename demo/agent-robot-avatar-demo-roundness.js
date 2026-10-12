@@ -2,22 +2,13 @@ const DEFAULT_VALUE = 50;
 const PRESET_VALUES = Object.freeze([0, 50, 100]);
 
 const LABELS = Object.freeze({
-  'zh-CN': { roundness: '头部圆角', free: '自由' },
-  'zh-TW': { roundness: '頭部圓角', free: '自由' },
-  en: { roundness: 'Head roundness', free: 'Free' },
-  ja: { roundness: 'ヘッドの丸み', free: '自由' },
-  ko: { roundness: '머리 둥글기', free: '자유' },
-  es: { roundness: 'Redondez', free: 'Libre' },
-  pt: { roundness: 'Arredondamento', free: 'Livre' },
-  de: { roundness: 'Kopfrundung', free: 'Frei' },
-  fr: { roundness: 'Arrondi', free: 'Libre' },
+  "en": {
+    "roundness": "Head roundness",
+    "free": "Free"
+  }
 });
 
-function activeLanguage() {
-  const lang = document.documentElement.lang || 'zh-CN';
-  if (LABELS[lang]) return lang;
-  return lang.startsWith('zh') ? 'zh-CN' : 'en';
-}
+function activeLanguage() { return 'en'; }
 
 function injectStyles() {
   if (document.getElementById('agent-demo-roundness-style-r68')) return;
@@ -118,8 +109,6 @@ function mountRoundnessControl() {
     }
   });
 
-  const langObserver = new MutationObserver(syncLanguage);
-  langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
   syncLanguage();
   apply();

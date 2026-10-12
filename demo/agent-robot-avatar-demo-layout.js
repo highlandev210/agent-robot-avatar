@@ -41,7 +41,7 @@ function watchControls(attempt = 0) {
   }
   window.addEventListener('resize', scheduleBalance);
   document.fonts?.ready.then(scheduleBalance);
-  // Button labels change with the demo language and as extra actions are added.
+  // Button labels change as extra actions are added.
   new MutationObserver(scheduleBalance).observe(controls, { childList: true, subtree: true, characterData: true });
   scheduleBalance();
 }
@@ -61,7 +61,7 @@ function mountDemoLayout() {
       const waitingButton = document.createElement('button');
       waitingButton.type = 'button';
       waitingButton.dataset.action = 'waiting';
-      waitingButton.textContent = '等待';
+      waitingButton.textContent = 'Waiting';
       const boredButton = controls.querySelector('[data-action="bored"]');
       if (boredButton) boredButton.insertAdjacentElement('afterend', waitingButton);
       else controls.appendChild(waitingButton);

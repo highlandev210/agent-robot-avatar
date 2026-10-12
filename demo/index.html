@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -81,25 +81,25 @@
   <div class="avatar-home" id="home">
     <agent-robot-avatar id="face" size="118" auto-sleep="18000"></agent-robot-avatar>
   </div>
-  <div class="status-pill" id="status">idle · 默认待机</div>
-  <label class="follow-control" title="控制眼睛和头部是否跟随鼠标">
-    <span>鼠标跟随</span>
+  <div class="status-pill" id="status">idle · Idle</div>
+  <label class="follow-control" title="Control whether eyes and head follow the pointer">
+    <span>Pointer follow</span>
     <input id="pointerFollow" type="checkbox" checked />
     <span class="follow-switch" aria-hidden="true"></span>
   </label>
 
   <div class="controls" aria-label="Avatar states">
-    <button type="button" data-action="idle">正常</button>
-    <button type="button" data-action="bored">发呆</button>
-    <button type="button" data-action="input">输入</button>
-    <button type="button" data-action="send">发送/点头</button>
-    <button type="button" data-action="success">成功</button>
-    <button type="button" data-action="warning">警告</button>
-    <button type="button" data-action="angry">内容阻止</button>
-    <button type="button" data-action="error">系统错误</button>
-    <button type="button" data-action="surprise">惊讶</button>
-    <button type="button" data-action="sleep">睡着</button>
-    <button type="button" data-action="wake">醒来</button>
+    <button type="button" data-action="idle">Normal</button>
+    <button type="button" data-action="bored">Bored</button>
+    <button type="button" data-action="input">Input</button>
+    <button type="button" data-action="send">Send/Nod</button>
+    <button type="button" data-action="success">Success</button>
+    <button type="button" data-action="warning">Warning</button>
+    <button type="button" data-action="angry">Blocked</button>
+    <button type="button" data-action="error">System Error</button>
+    <button type="button" data-action="surprise">Surprise</button>
+    <button type="button" data-action="sleep">Sleep</button>
+    <button type="button" data-action="wake">Wake</button>
   </div>
 
   <a class="support-link" href="https://ko-fi.com/P0E625WIOI" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee on Ko-fi">
@@ -108,21 +108,21 @@
 </div>
 
 <div class="agent-overlay" id="agentOverlay" aria-hidden="true">
-  <section class="agent-phone" role="dialog" aria-modal="true" aria-label="Agent 对话演示">
+  <section class="agent-phone" role="dialog" aria-modal="true" aria-label="Agent chat demo">
     <div class="panel-head">
       <div class="panel-face-slot" id="slot"></div>
-      <div class="panel-copy"><div class="panel-title">Agent</div><div class="panel-sub">随机状态回复演示</div></div>
-      <button type="button" class="close" id="close" aria-label="关闭">×</button>
+      <div class="panel-copy"><div class="panel-title">Agent</div><div class="panel-sub">Random state response demo</div></div>
+      <button type="button" class="close" id="close" aria-label="Close">×</button>
     </div>
     <div class="chat" id="chat">
-      <div class="message agent"><div class="bubble">这是一个模拟 Agent。输入任意内容后，会随机模拟成功、风险确认、内容阻止、系统错误等回复，并在正文下方标注对应表情。</div></div>
+      <div class="message agent"><div class="bubble">This is a simulated Agent. Enter anything to trigger random success, confirmation, blocked-content, system-error and other responses, with the matching expression shown below each reply.</div></div>
     </div>
     <div class="composer-wrap">
       <div class="composer">
-        <textarea id="input" placeholder="输入内容……"></textarea>
+        <textarea id="input" placeholder="Type a message…"></textarea>
         <div class="sendrow">
-          <span class="hint">Enter 发送 · Shift+Enter 换行</span>
-          <button type="button" class="send" id="send">发送</button>
+          <span class="hint">Enter to send · Shift+Enter for new line</span>
+          <button type="button" class="send" id="send">Send</button>
         </div>
       </div>
     </div>
@@ -149,19 +149,78 @@
   let replyToken = 0;
 
   const stateNames = {
-    idle: '默认待机', bored: '发呆', input: '输入中', happy: '成功',
-    warning: '警告确认', angry: '内容阻止', error: '系统错误',
-    surprise: '惊讶', sleepy: '困倦', sleep: '睡眠'
-  };
+  "idle": "Idle",
+  "bored": "Bored",
+  "waiting": "Waiting",
+  "input": "Input",
+  "send": "Sending",
+  "success": "Success",
+  "happy": "Success",
+  "warning": "Warning",
+  "angry": "Blocked",
+  "error": "System Error",
+  "surprise": "Surprise",
+  "sleepy": "Sleepy",
+  "sleep": "Sleeping",
+  "wake": "Awake"
+};
 
   const replies = [
-    {state:'success', label:'演示表情 · 成功 / success', texts:['任务已经完成，结果看起来不错。','处理完成，没有发现需要你继续操作的问题。','完成了。这次执行很顺利。']},
-    {state:'warning', label:'演示表情 · 警告确认 / warning', texts:['这个操作会覆盖现有内容。确认要继续吗？','这一步可能造成不可逆的修改，你确定要执行吗？','即将进行高影响操作，请再次确认是否继续。']},
-    {state:'angry', label:'演示表情 · 内容阻止 / angry', texts:['这条内容不允许继续发送，操作已被阻止。','当前请求违反了允许范围，我不能执行。','这个操作不符合当前规则，已停止继续处理。']},
-    {state:'error', label:'演示表情 · 系统错误 / error', texts:['连接服务失败，请检查网络后重试。','系统暂时无法完成请求，稍后再试一次。','与服务端的连接中断了，这次操作没有完成。']},
-    {state:'surprise', label:'演示表情 · 意外 / surprise', texts:['有点意外，我发现了一个和预期不同的结果。','这个结果比预想中更特别，我需要重新判断一下。','发现了一个意外情况，不过信息已经保留下来了。']},
-    {state:'bored', label:'演示表情 · 等待 / bored', texts:['还在等外部结果返回，这一步比平时慢一点。','暂时没有新的变化，我还在等待。','任务还没有结束，目前处于等待状态。']}
-  ];
+  {
+    "state": "success",
+    "label": "Demo expression · Success",
+    "texts": [
+      "The task is complete and the result looks good.",
+      "Finished. There is nothing else you need to do.",
+      "Done. This run completed smoothly."
+    ]
+  },
+  {
+    "state": "warning",
+    "label": "Demo expression · Warning",
+    "texts": [
+      "This action will overwrite existing content. Continue?",
+      "This step may cause irreversible changes. Are you sure?",
+      "This is a high-impact action. Please confirm before continuing."
+    ]
+  },
+  {
+    "state": "angry",
+    "label": "Demo expression · Blocked",
+    "texts": [
+      "This content cannot be sent. The action has been blocked.",
+      "The request is outside the allowed range, so I cannot perform it.",
+      "This action does not meet the current rules and has been stopped."
+    ]
+  },
+  {
+    "state": "error",
+    "label": "Demo expression · System error",
+    "texts": [
+      "Connection failed. Check the network and try again.",
+      "The system cannot complete the request right now. Try again later.",
+      "The server connection was interrupted and the action did not finish."
+    ]
+  },
+  {
+    "state": "surprise",
+    "label": "Demo expression · Surprise",
+    "texts": [
+      "That was unexpected. I found a result different from what we anticipated.",
+      "This result is more unusual than expected; I need to reassess it.",
+      "An unexpected condition appeared, but the information has been preserved."
+    ]
+  },
+  {
+    "state": "bored",
+    "label": "Demo expression · Waiting",
+    "texts": [
+      "Still waiting for an external result; this step is taking longer than usual.",
+      "No new changes yet. I am still waiting.",
+      "The task is not finished yet and is currently waiting."
+    ]
+  }
+];
 
   face.setPointerFollow(pointerFollow.checked);
   pointerFollow.addEventListener('change', () => {
@@ -170,7 +229,7 @@
 
   face.addEventListener('face-state', (event) => {
     const state = event.detail.state;
-    status.textContent = `${state} · ${stateNames[state] || '状态切换'}`;
+    status.textContent = `${state} · ${stateNames[state] || 'State change'}`;
   });
 
   function flipMove(el, destination, newSize){

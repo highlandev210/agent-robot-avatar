@@ -1,13 +1,9 @@
 const LABELS = Object.freeze({
-  'zh-CN': { top: '顶部', chat: '对话', title: '头像位置' },
-  'zh-TW': { top: '頂部', chat: '對話', title: '頭像位置' },
-  en: { top: 'Top', chat: 'Chat', title: 'Avatar position' },
-  ja: { top: '上部', chat: '会話', title: 'アバター位置' },
-  ko: { top: '상단', chat: '대화', title: '아바타 위치' },
-  es: { top: 'Arriba', chat: 'Chat', title: 'Posición del avatar' },
-  pt: { top: 'Topo', chat: 'Chat', title: 'Posição do avatar' },
-  de: { top: 'Oben', chat: 'Chat', title: 'Avatar-Position' },
-  fr: { top: 'Haut', chat: 'Chat', title: "Position de l’avatar" },
+  "en": {
+    "top": "Top",
+    "chat": "Chat",
+    "title": "Avatar position"
+  }
 });
 
 const face = document.getElementById('face');
@@ -26,10 +22,7 @@ try {
   if (saved === 'top' || saved === 'inline') mode = saved;
 } catch (_) {}
 
-function activeLanguage() {
-  const lang = document.documentElement.lang || 'en';
-  return LABELS[lang] ? lang : 'en';
-}
+function activeLanguage() { return 'en'; }
 
 function injectStyles() {
   if (document.getElementById('agent-demo-chat-avatar-mode-r63')) return;
@@ -239,8 +232,6 @@ if (headerSlot) {
   slotObserver.observe(headerSlot, { childList: true });
 }
 
-const langObserver = new MutationObserver(updateSwitchLanguage);
-langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
 window.AgentRobotAvatarDemoAvatarMode = {
   get mode() { return mode; },

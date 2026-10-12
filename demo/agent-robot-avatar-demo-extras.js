@@ -1,61 +1,36 @@
 const INSPECT_LABELS = Object.freeze({
-  'zh-CN': { action: '审视', state: '审视 / 核对' },
-  'zh-TW': { action: '審視', state: '審視 / 核對' },
-  en: { action: 'Inspect', state: 'Inspect / Verify' },
-  ja: { action: '確認', state: '確認 / 検証' },
-  ko: { action: '검토', state: '검토 / 확인' },
-  es: { action: 'Revisar', state: 'Revisar / Verificar' },
-  pt: { action: 'Revisar', state: 'Revisar / Verificar' },
-  de: { action: 'Prüfen', state: 'Prüfen / Kontrollieren' },
-  fr: { action: 'Vérifier', state: 'Vérifier / Contrôler' },
+  "en": {
+    "action": "Inspect",
+    "state": "Inspect / Verify"
+  }
 });
 
 const FAILURE_LABELS = Object.freeze({
-  'zh-CN': { action: '失败', state: '失败' },
-  'zh-TW': { action: '失敗', state: '失敗' },
-  en: { action: 'Failure', state: 'Failure' },
-  ja: { action: '失敗', state: '失敗' },
-  ko: { action: '실패', state: '실패' },
-  es: { action: 'Fallo', state: 'Fallo' },
-  pt: { action: 'Falha', state: 'Falha' },
-  de: { action: 'Fehlgeschlagen', state: 'Fehlgeschlagen' },
-  fr: { action: 'Échec', state: 'Échec' },
+  "en": {
+    "action": "Failure",
+    "state": "Failure"
+  }
 });
 
 const LOVE_LABELS = Object.freeze({
-  'zh-CN': { action: '喜欢', state: '喜欢 / 爱心' },
-  'zh-TW': { action: '喜歡', state: '喜歡 / 愛心' },
-  en: { action: 'Love', state: 'Love / Heart' },
-  ja: { action: '好き', state: '好き / ハート' },
-  ko: { action: '좋아요', state: '좋아요 / 하트' },
-  es: { action: 'Amor', state: 'Amor / Corazón' },
-  pt: { action: 'Amor', state: 'Amor / Coração' },
-  de: { action: 'Liebe', state: 'Liebe / Herz' },
-  fr: { action: 'Amour', state: 'Amour / Cœur' },
+  "en": {
+    "action": "Love",
+    "state": "Love / Heart"
+  }
 });
 
 const RANDOM_LABELS = Object.freeze({
-  'zh-CN': { action: '随机', state: '随机 / 老虎机' },
-  'zh-TW': { action: '隨機', state: '隨機 / 老虎機' },
-  en: { action: 'Random', state: 'Random / Slot machine' },
-  ja: { action: 'ランダム', state: 'ランダム / スロット' },
-  ko: { action: '랜덤', state: '랜덤 / 슬롯머신' },
-  es: { action: 'Azar', state: 'Azar / Tragaperras' },
-  pt: { action: 'Aleatório', state: 'Aleatório / Caça-níqueis' },
-  de: { action: 'Zufall', state: 'Zufall / Spielautomat' },
-  fr: { action: 'Aléatoire', state: 'Aléatoire / Machine à sous' },
+  "en": {
+    "action": "Random",
+    "state": "Random / Slot machine"
+  }
 });
 
 const WRAP_WAITING_LABELS = Object.freeze({
-  'zh-CN':'等待 · 环绕', 'zh-TW':'等待 · 環繞', en:'Waiting · Wrap', ja:'待機 · 回り込み',
-  ko:'대기 · 감싸기', es:'Espera · Envoltura', pt:'Espera · Contorno', de:'Warten · Umlauf', fr:'Attente · Enveloppement',
+  "en": "Waiting · Wrap"
 });
 
-function activeLanguage(table) {
-  const lang = document.documentElement.lang || 'zh-CN';
-  if (table[lang]) return lang;
-  return lang.startsWith('zh') ? 'zh-CN' : 'en';
-}
+function activeLanguage() { return 'en'; }
 
 // Actions added in the latest release are shown last and flagged with a corner badge.
 function markAsNew(button) {
@@ -148,9 +123,6 @@ function mountExtras() {
   mountWaitingSync();
   mountStateLabels();
 
-  new MutationObserver(() => {
-    syncActionLabels();
-  }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
 }
 
