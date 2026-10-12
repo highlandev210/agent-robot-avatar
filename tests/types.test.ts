@@ -38,6 +38,7 @@ avatar
   .stopWaiting()
   .setPointerFollow(false)
   .setAntennaFlash(true)
+  .setBody(true)
   .setHeadRoundness(50)
   .reset();
 

@@ -42,6 +42,7 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 - Reduced-motion support
 - Configurable sleep behavior
 - Adjustable head roundness
+- Optional floating body with spring-driven arms
 - Optional antenna status flashing
 - TypeScript declarations included
 
@@ -128,6 +129,7 @@ try {
 | `motion` | Motion policy: `auto`, `reduce`, or `full` |
 | `press-squeeze` | Center press-and-hold squeeze; set to `false` to disable |
 | `antenna-drag` | Antenna drag, spring return, and angry reaction; set to `false` to disable |
+| `body` | Show the floating body below the face; off by default |
 
 Common runtime controls:
 
@@ -137,9 +139,22 @@ avatar.setHeadRoundness(75);
 avatar.setAntennaFlash(true);
 avatar.setPressSqueeze(true);
 avatar.setAntennaDrag(true);
+avatar.setBody(true);
 ```
 
 The avatar center begins the squeeze interaction. Moving more than 4 CSS pixels transfers the same pointer gesture to the existing head drag. Dragging the antenna uses the same pull limit as head dragging and ends with the existing angry reaction.
+
+## Floating body
+
+Add the `body` attribute to give the avatar an egg-shaped torso and detached arms that float below the face:
+
+```html
+<agent-robot-avatar size="140" body></agent-robot-avatar>
+```
+
+The body is driven by springs, like the antenna, so it trails every head movement, leans toward the pointer, and reacts to each action: arms cheer on `success`, droop on `failure`, spin around the torso while waiting, and fold flush into an egg during `sleep`. Pressing the body nudges it without starting a head drag.
+
+`size` still sets the face width; with a body the element becomes 1.6 times as tall. Toggle it at runtime with `avatar.setBody(true)` or `avatar.setBody(false)`. See [`examples/body.html`](./examples/body.html).
 
 ## Events and integration
 

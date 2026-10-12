@@ -100,6 +100,7 @@ export declare class AgentRobotAvatar extends HTMLElement {
   setAntennaFlash(enabled?: boolean): this;
   setPressSqueeze(enabled?: boolean): this;
   setAntennaDrag(enabled?: boolean): this;
+  setBody(enabled?: boolean): this;
   setHeadRoundness(value?: number): this;
   getHeadRoundness(): number;
   noteActivity(wake?: boolean): void;

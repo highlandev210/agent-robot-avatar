@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Agent Robot Avatar — Body Example</title>
+  <style>
+    html,body{min-height:100%;margin:0}
+    body{display:grid;place-items:center;background:#f7f7f5;font-family:system-ui,sans-serif;padding:32px 16px;box-sizing:border-box}
+    .example{display:grid;gap:28px;justify-items:center;max-width:560px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+    button{border:0;border-radius:10px;padding:8px 12px;cursor:pointer;background:#e7e7e3}
+    button[aria-pressed="true"]{background:#111;color:#fff}
+    p{margin:0;color:#666;font-size:14px;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="example">
+    <agent-robot-avatar id="avatar" size="160" body></agent-robot-avatar>
+    <p>The body trails the head on springs. Move the pointer near it, drag the head, or tap the body.</p>
+    <div class="actions">
+      <button type="button" data-action="idle">Idle</button>
+      <button type="button" data-action="success">Success</button>
+      <button type="button" data-action="failure">Failure</button>
+      <button type="button" data-action="warning">Warning</button>
+      <button type="button" data-action="error">Error</button>
+      <button type="button" data-action="blocked">Blocked</button>
+      <button type="button" data-action="inspect">Inspect</button>
+      <button type="button" data-action="surprise">Surprise</button>
+      <button type="button" data-action="love">Love</button>
+      <button type="button" data-action="random">Random</button>
+      <button type="button" data-action="send">Send</button>
+      <button type="button" data-action="input">Input</button>
+      <button type="button" data-action="bored">Bored</button>
+      <button type="button" data-action="sleep">Sleep</button>
+      <button type="button" data-action="wake">Wake</button>
+    </div>
+    <div class="actions">
+      <button type="button" id="waiting" aria-pressed="false">Waiting</button>
+      <button type="button" id="body" aria-pressed="true">Body</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import '../agent-robot-avatar.js';
+
+    const avatar = document.querySelector('#avatar');
+    const waiting = document.querySelector('#waiting');
+    const body = document.querySelector('#body');
+
+    document.querySelector('.actions').addEventListener('click', (event) => {
+      const action = event.target.dataset.action;
+      if (!action) return;
+      waiting.setAttribute('aria-pressed', 'false');
+      avatar.play(action);
+    });
+
+    waiting.addEventListener('click', () => {
+      const active = waiting.getAttribute('aria-pressed') !== 'true';
+      waiting.setAttribute('aria-pressed', String(active));
+      if (active) avatar.startWaiting();
+      else avatar.stopWaiting();
+    });
+
+    body.addEventListener('click', () => {
+      const enabled = body.getAttribute('aria-pressed') !== 'true';
+      body.setAttribute('aria-pressed', String(enabled));
+      avatar.setBody(enabled);
+    });
+  </script>
+</body>
+</html>

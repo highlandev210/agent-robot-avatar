@@ -50,7 +50,7 @@ proto.setAntennaDrag=function(enabled=true){
 
 proto._startGesture=function(event) {
   if(event.button!==0||event.isPrimary===false||this._gestureFx?.held)return false;
-  const box=this.getBoundingClientRect(),dot=this._antennaDot;
+  const box=this._faceRect(),dot=this._antennaDot;
   const x=(event.clientX-box.left)/box.width-.5,y=(event.clientY-box.top)/box.height-.5;
   const r=dot?.getBoundingClientRect(),radius=r?Math.max(10,Math.max(r.width,r.height)/2+3):0;
   const onAntenna=r && Number(dot.getAttribute('opacity')??1)>.01 &&
@@ -75,7 +75,7 @@ proto._startGesture=function(event) {
 proto._moveGesture=function(event) {
   const s=this._gestureFx;if(!s?.held||s.pointerId!==event.pointerId)return;
   if(s.kind==='antenna-drag'){
-    const gaze=gazeTarget(this.getBoundingClientRect(),event);s.gazeX=gaze.x;s.gazeY=gaze.y;
+    const gaze=gazeTarget(this._faceRect(),event);s.gazeX=gaze.x;s.gazeY=gaze.y;
   }
   const dx=event.clientX-s.startX,dy=event.clientY-s.startY,dist=Math.hypot(dx,dy);
   s.maxDist=Math.max(s.maxDist,dist);

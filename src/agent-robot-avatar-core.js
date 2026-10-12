@@ -322,8 +322,14 @@ const AgentRobotAvatar = (() => {
       return `${d} Z`;
     }
 
+    // The face square in client pixels. Extensions that add content outside
+    // the face (such as the body) override this so pointer math stays face-relative.
+    _faceRect() {
+      return this.getBoundingClientRect();
+    }
+
     _clientToLocal(clientX, clientY) {
-      const r = this.getBoundingClientRect();
+      const r = this._faceRect();
       return {
         x: clamp(((clientX - r.left) / Math.max(1, r.width)) * 240, 0, 240),
         y: clamp(((clientY - r.top) / Math.max(1, r.height)) * 240, 0, 240),
@@ -366,7 +372,7 @@ const AgentRobotAvatar = (() => {
     }
 
     _onPointerMove(e) {
-      const r = this.getBoundingClientRect();
+      const r = this._faceRect();
       const cx = r.left + r.width / 2;
       const cy = r.top + r.height / 2;
       const dx = e.clientX - cx;
@@ -384,7 +390,7 @@ const AgentRobotAvatar = (() => {
 
     _onDragStart(e) {
       if (e.button != null && e.button !== 0) return;
-      const r = this.getBoundingClientRect();
+      const r = this._faceRect();
       const j = this._dragJelly;
       j.active = true;
       j.returning = false;
@@ -425,7 +431,7 @@ const AgentRobotAvatar = (() => {
         j.moved = true;
         this._suppressClick = true;
       }
-      const r = this.getBoundingClientRect();
+      const r = this._faceRect();
       const size = Math.max(1, Math.max(r.width, r.height));
       const localScale = 240 / size;
       const pdx = dx * localScale;

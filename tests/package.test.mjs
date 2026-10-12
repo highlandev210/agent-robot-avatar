@@ -45,6 +45,7 @@ test('package contains the complete runtime and excludes the demo', async () => 
     'src/agent-robot-avatar-random.js',
     'src/agent-robot-avatar-head-roundness.js',
     'src/agent-robot-avatar-runtime.js',
+    'src/agent-robot-avatar-body.js',
   ];
 
   for (const file of required) assert.ok(files.has(file), `Missing package file: ${file}`);

@@ -6,6 +6,10 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+### Added
+
+- Added an optional floating body (`body` attribute or `setBody()`): an egg-shaped torso with detached arms that trail the head on springs, lean toward the pointer, take a pose for every action, spin with the waiting eyes, and fold into an egg while asleep.
+
 ### Changed
 
 - Refined the warning expression with independently tilted eyes, adjusted eye proportions and eyelids, and a longer raised-head pause.
